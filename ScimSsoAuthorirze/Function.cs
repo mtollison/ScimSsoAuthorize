@@ -11,7 +11,7 @@ using System.Net;
 namespace ScimSsoAuthorize
 {
     public class Function
-    {
+    { 
         private readonly IAmazonAPIGateway _apiGateway;
         private static readonly Dictionary<string, string> _responseHeaders = new()
         {
