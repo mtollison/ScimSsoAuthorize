@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35818.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScimSsoAuthorize", "ScimSsoAuthorirze\ScimSsoAuthorize.csproj", "{11EF0E91-CF3F-CE91-78CB-51514C63AE02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScimSsoAuthorize", "ScimSsoAuthorize\ScimSsoAuthorize.csproj", "{11EF0E91-CF3F-CE91-78CB-51514C63AE02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScimSsoAuthorize.Tests", "ScimSsoAuthorize.Tests\ScimSsoAuthorize.Tests.csproj", "{978AD24F-A450-4C2B-BA0D-CBA13C5E94BB}"
 EndProject

@@ -16,7 +16,7 @@ namespace ScimSsoAuthorize.Tests
         [SetUp]
         public void Setup()
         {
-            // ✅ Ensure the mocked API Gateway is passed to the function
+            //Ensure the mocked API Gateway is passed to the function
             _mockApiGateway = new Mock<IAmazonAPIGateway>();
             _function = new Function(_mockApiGateway.Object);
         }
@@ -25,18 +25,18 @@ namespace ScimSsoAuthorize.Tests
         public async Task FunctionHandler_ValidApiKey_ReturnsOk()
         {
             // Arrange: Mock API Gateway to return a valid API key
-            _mockApiGateway.Setup(x => x.GetApiKeysAsync(It.IsAny<GetApiKeysRequest>(), default))
-                .ReturnsAsync(new GetApiKeysResponse
-                {
-                    Items = new List<ApiKey>
+            _mockApiGateway?.Setup(x => x.GetApiKeysAsync(It.IsAny<GetApiKeysRequest>(), default))
+                    .ReturnsAsync(new GetApiKeysResponse
                     {
-                        new ApiKey { Value = "valid-api-key" }
-                    }
-                });
+                        Items = new List<ApiKey>
+                        {
+                            new ApiKey { Value = "95OmsemxXW2z3TYmLQfEJ7pt3ER2sXIO6pjMt5uJ" }
+                        }
+                    });
 
             var request = new APIGatewayProxyRequest
             {
-                Headers = new Dictionary<string, string> { { "x-api-key", "valid-api-key" } }
+                Headers = new Dictionary<string, string> { { "x-api-key", "95OmsemxXW2z3TYmLQfEJ7pt3ER2sXIO6pjMt5uJ" } }
             };
 
             // Act: Call the function

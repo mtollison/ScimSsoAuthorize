@@ -10,9 +10,9 @@ using System.Net;
 
 namespace ScimSsoAuthorize
 {
-    public class Function
-    { 
-        private readonly IAmazonAPIGateway _apiGateway;
+    public class Function(IAmazonAPIGateway apiGateway)
+    {
+        private readonly IAmazonAPIGateway _apiGateway = apiGateway ?? throw new ArgumentNullException(nameof(apiGateway));
         private static readonly Dictionary<string, string> _responseHeaders = new()
         {
             { "Access-Control-Allow-Headers", "Content-Type" },
@@ -20,24 +20,21 @@ namespace ScimSsoAuthorize
             { "Access-Control-Allow-Methods", "OPTIONS,POST,GET" }
         };
 
+        //Default constructor for AWS Lambda
         public Function() : this(new AmazonAPIGatewayClient()) { }
 
-        public Function(IAmazonAPIGateway apiGateway)
-        {
-            _apiGateway = apiGateway ?? throw new ArgumentNullException(nameof(apiGateway));
-        }
-
-        public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest request, ILambdaContext context)
+        //Lambda function handler
+        public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest request, ILambdaContext? context)
         {
             try
             {
-                // Extract API key from request headers
-                if (!request.Headers.TryGetValue("x-api-key", out string providedApiKey) || string.IsNullOrEmpty(providedApiKey))
+                //Ensure Headers Exist
+                if (request.Headers == null || !request.Headers.TryGetValue("x-api-key", out string? providedApiKey) || string.IsNullOrEmpty(providedApiKey))
                 {
                     return GenerateResponse(HttpStatusCode.Forbidden, "Missing API Key");
                 }
 
-                // Validate API key with API Gateway
+                //Validate API Key with API Gateway
                 bool isValidKey = await ValidateApiKey(providedApiKey);
 
                 if (!isValidKey)
@@ -54,15 +51,15 @@ namespace ScimSsoAuthorize
             }
         }
 
+        //Validate API Key against API Gateway
         private async Task<bool> ValidateApiKey(string apiKey)
         {
             try
             {
-                // Retrieve API Key details from AWS API Gateway
                 var getApiKeysRequest = new GetApiKeysRequest { IncludeValues = true };
                 var apiKeysResponse = await _apiGateway.GetApiKeysAsync(getApiKeysRequest);
 
-                foreach (var apiKeyDetails in apiKeysResponse.Items)
+                foreach (var apiKeyDetails in apiKeysResponse.Items ?? [])
                 {
                     if (apiKeyDetails.Value == apiKey)
                     {
@@ -79,6 +76,7 @@ namespace ScimSsoAuthorize
             }
         }
 
+        //Helper to return JSON response
         private APIGatewayProxyResponse GenerateResponse(HttpStatusCode statusCode, string message)
         {
             return new APIGatewayProxyResponse
